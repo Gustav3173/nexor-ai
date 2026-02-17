@@ -4,13 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nexor AI Chatbot</title>
+    <script>
+        // Load environment variables
+        const API_KEY = process.env.API_KEY; // API key should be set in the environment variables
+
+        async function fetchResponse(userInput) {
+            const response = await fetch('https://api.nexor.ai/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${API_KEY}`
+                },
+                body: JSON.stringify({ user_input: userInput })
+            });
+            return response.json();
+        }
+
+        async function handleSubmit(event) {
+            event.preventDefault();
+            const userInput = document.getElementById('user-input').value;
+            const botResponse = await fetchResponse(userInput);
+            document.getElementById('response').innerText = botResponse.reply;
+        }
+    </script>
 </head>
 <body>
-    <h1>Welcome to the Nexor AI Chatbot</h1>
-    <script>
-        const API_KEY = process.env.NEXOR_API_KEY; // Use environment variable for API key
-        // Chatbot logic here
-        // You can use the API_KEY in your API requests
-    </script>
+    <h1>Nexor AI Chatbot</h1>
+    <form onsubmit="handleSubmit(event)">
+        <input type="text" id="user-input" placeholder="Ask me anything..." required>
+        <button type="submit">Send</button>
+    </form>
+    <div id="response"></div>
 </body>
 </html>
