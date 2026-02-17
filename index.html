@@ -1434,14 +1434,8 @@
 
             // Modo online - API Groq (CORRIGIDO E ATUALIZADO)
             try {
-                const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    "Authorization": "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"
-  },
-  body: JSON.stringify({...})
-});
+                const apiUrl = 'https://api.groq.com/openai/v1/chat/completions';
+                
                 // Preparar mensagens para o formato da Groq
                 const groqMessages = [
                     {
@@ -1721,6 +1715,10 @@
         console.log('🚀 Nexor AI v3.0 Ultimate - Inicializada!');
         console.log('Criada por @araujzzzk - TikTok & Instagram');
         console.log('Powered by Groq API ⚡');
-</script>
+    </script>
 </body>
 </html>
+owered by Groq API ⚡');
+    </script>
+</body>
+    </html>
