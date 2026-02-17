@@ -1,0 +1,1724 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexor AI - Ultimate Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --primary: #00d4ff;
+            --secondary: #ff00ff;
+            --accent: #ff006e;
+            --success: #00ff88;
+            --warning: #ffaa00;
+            --dark: #0a0a0f;
+            --darker: #050508;
+            --card: #151520;
+            --hover: #1f1f2e;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 20px var(--primary); }
+            50% { opacity: 0.8; box-shadow: 0 0 40px var(--primary), 0 0 60px var(--secondary); }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 5px var(--primary), 0 0 10px var(--primary); }
+            50% { box-shadow: 0 0 20px var(--primary), 0 0 30px var(--secondary); }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--darker);
+            color: #fff;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app {
+            display: flex;
+            height: 100vh;
+            background: linear-gradient(135deg, var(--darker) 0%, #0f0f1a 50%, var(--darker) 100%);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 300px;
+            background: rgba(21, 21, 32, 0.98);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            position: relative;
+            overflow-y: auto;
+        }
+
+        .sidebar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), var(--secondary), transparent);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 1.8rem;
+            animation: float 3s ease-in-out infinite;
+            box-shadow: 0 0 25px rgba(0, 212, 255, 0.4);
+            position: relative;
+            overflow: hidden;
+            background: transparent;
+        }
+
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .logo-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .version {
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.5);
+            margin-top: 2px;
+        }
+
+        .new-chat-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            color: white;
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+            animation: glow 2s infinite;
+        }
+
+        .new-chat-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.4);
+        }
+
+        .section-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 12px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-history {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            padding: 10px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+            position: relative;
+        }
+
+        .history-item:hover {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: var(--primary);
+        }
+
+        .history-item.active {
+            background: linear-gradient(90deg, rgba(0,212,255,0.2), transparent);
+            border-color: var(--primary);
+        }
+
+        .history-item .delete-btn {
+            position: absolute;
+            right: 8px;
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.5);
+            cursor: pointer;
+            font-size: 1rem;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+
+        .history-item .delete-btn:hover {
+            background: rgba(255,0,0,0.2);
+            color: #ff4444;
+        }
+
+        .tools {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .tool-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            padding: 12px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        .tool-btn:hover, .tool-btn.active {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: var(--primary);
+            transform: translateX(5px);
+        }
+
+        .tool-btn.active {
+            background: linear-gradient(90deg, rgba(0,212,255,0.2), transparent);
+        }
+
+        .tool-icon {
+            font-size: 1.3rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .offline-badge {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid var(--success);
+            color: var(--success);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            text-align: center;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .offline-badge.show {
+            display: block;
+        }
+
+        .creator-box {
+            margin-top: auto;
+            background: linear-gradient(135deg, rgba(0,212,255,0.1), rgba(255,0,255,0.1));
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .creator-box p {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 8px;
+        }
+
+        .creator-box a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin: 2px;
+            transition: all 0.3s;
+        }
+
+        .creator-box a:hover {
+            color: var(--secondary);
+            text-shadow: 0 0 10px var(--secondary);
+        }
+
+        /* Main */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .header {
+            background: rgba(21, 21, 32, 0.9);
+            backdrop-filter: blur(20px);
+            padding: 15px 25px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+            position: relative;
+        }
+
+        .status-dot::after {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            border: 2px solid var(--success);
+            border-radius: 50%;
+            opacity: 0;
+            animation: pulse 2s infinite;
+        }
+
+        .status-dot.offline {
+            background: var(--warning);
+        }
+
+        .header-title {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .header-subtitle {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.5);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .icon-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            font-size: 1.1rem;
+        }
+
+        .icon-btn:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        /* Chat */
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 25px;
+            scroll-behavior: smooth;
+        }
+
+        .welcome {
+            text-align: center;
+            padding: 50px 20px;
+            animation: slideIn 0.6s ease;
+        }
+
+        .welcome-logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 5rem;
+            font-weight: 900;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            animation: float 4s ease-in-out infinite;
+            text-shadow: 0 0 60px rgba(0, 212, 255, 0.5);
+        }
+
+        .welcome h2 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .welcome p {
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 35px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .quick-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            padding: 14px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quick-btn:hover {
+            background: rgba(0,212,255,0.15);
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+        }
+
+        .message {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            animation: slideIn 0.3s ease;
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .msg-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .msg-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .message.assistant .msg-avatar {
+            background: linear-gradient(135deg, var(--accent), var(--secondary));
+            box-shadow: 0 0 20px rgba(255, 0, 110, 0.5);
+        }
+
+        .message.user .msg-avatar {
+            background: linear-gradient(135deg, var(--primary), #0088ff);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+        }
+
+        .msg-content {
+            max-width: 70%;
+            padding: 16px 20px;
+            border-radius: 20px;
+            line-height: 1.7;
+            font-size: 0.95rem;
+            position: relative;
+        }
+
+        .message.assistant .msg-content {
+            background: var(--card);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-bottom-left-radius: 4px;
+        }
+
+        .message.user .msg-content {
+            background: linear-gradient(135deg, rgba(0,212,255,0.15), rgba(255,0,255,0.15));
+            border: 1px solid rgba(0,212,255,0.3);
+            border-bottom-right-radius: 4px;
+        }
+
+        .msg-image {
+            max-width: 100%;
+            border-radius: 12px;
+            margin-top: 12px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .msg-image:hover {
+            border-color: var(--primary);
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
+        }
+
+        .msg-time {
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.4);
+            margin-top: 8px;
+            text-align: right;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 5px;
+            padding: 12px 0;
+        }
+
+        .typing-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--primary);
+            border-radius: 50%;
+            animation: typingBounce 1.4s infinite ease-in-out both;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes typingBounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        /* Input */
+        .input-container {
+            padding: 20px 25px;
+            background: rgba(21, 21, 32, 0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .input-wrapper {
+            display: flex;
+            align-items: flex-end;
+            gap: 12px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 25px;
+            padding: 10px 10px 10px 20px;
+            transition: all 0.3s;
+        }
+
+        .input-wrapper:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
+        }
+
+        .input-actions {
+            display: flex;
+            gap: 8px;
+            padding: 8px 0;
+        }
+
+        .attach-btn, .mic-btn {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.6);
+            font-size: 1.4rem;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 50%;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .attach-btn:hover, .mic-btn:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        .attach-btn input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        textarea {
+            flex: 1;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1rem;
+            resize: none;
+            max-height: 150px;
+            font-family: inherit;
+            outline: none;
+            padding: 10px 0;
+        }
+
+        textarea::placeholder {
+            color: rgba(255,255,255,0.4);
+        }
+
+        .send-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            color: white;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            font-size: 1.3rem;
+            box-shadow: 0 5px 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .send-btn:hover:not(:disabled) {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.5);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .input-chips {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .chip {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.8);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .chip:hover {
+            background: rgba(0,212,255,0.15);
+            border-color: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(15px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--card);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 25px;
+            padding: 35px;
+            max-width: 550px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+        }
+
+        .modal-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .modal-input {
+            width: 100%;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 15px;
+            padding: 18px;
+            color: white;
+            font-size: 1rem;
+            margin: 20px 0;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .modal-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            color: white;
+            padding: 14px 35px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 14px 35px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.15);
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--card);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: white;
+            padding: 18px 28px;
+            border-radius: 15px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+            display: none;
+            align-items: center;
+            gap: 15px;
+            z-index: 10000;
+            animation: slideIn 0.4s ease;
+            font-size: 0.95rem;
+        }
+
+        .toast.show {
+            display: flex;
+        }
+
+        .toast-icon {
+            font-size: 1.5rem;
+        }
+
+        /* Preview de imagem */
+        .image-preview {
+            position: relative;
+            margin: 10px 0;
+            display: inline-block;
+        }
+
+        .image-preview img {
+            max-height: 100px;
+            border-radius: 10px;
+            border: 2px solid var(--primary);
+        }
+
+        .image-preview .remove {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ff4444;
+            border: none;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        /* Responsivo */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: -300px;
+                z-index: 999;
+                transition: left 0.3s;
+                width: 280px;
+            }
+            .sidebar.open {
+                left: 0;
+            }
+            .welcome-logo {
+                font-size: 3rem;
+            }
+            .msg-content {
+                max-width: 85%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <img src="https://i.imgur.com/41424.png" alt="Nexor AI Logo" onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=Nexor&backgroundColor=00d4ff'">
+                </div>
+                <div>
+                    <div class="logo-text">NEXOR</div>
+                    <div class="version">v3.0 Ultimate</div>
+                </div>
+            </div>
+
+            <button class="new-chat-btn" onclick="newChat()">
+                <span>+</span> Novo Chat
+            </button>
+
+            <div class="offline-badge" id="offlineBadge">
+                🟡 Modo Offline Ativo
+            </div>
+
+            <div class="section-title">
+                <span>Histórico</span>
+                <span style="font-size: 0.7rem; color: rgba(255,255,255,0.4);" id="chatCount">0 chats</span>
+            </div>
+            <div class="chat-history" id="chatHistory">
+                <!-- Chats salvos aparecem aqui -->
+            </div>
+
+            <div class="section-title">Ferramentas</div>
+            <div class="tools">
+                <button class="tool-btn active" onclick="setTool('chat')" data-tool="chat">
+                    <span class="tool-icon">💬</span>
+                    <span>Chat IA</span>
+                </button>
+                <button class="tool-btn" onclick="setTool('image')" data-tool="image">
+                    <span class="tool-icon">🎨</span>
+                    <span>Gerar Imagem</span>
+                </button>
+                <button class="tool-btn" onclick="setTool('vision')" data-tool="vision">
+                    <span class="tool-icon">👁️</span>
+                    <span>Analisar Foto</span>
+                </button>
+                <button class="tool-btn" onclick="setTool('code')" data-tool="code">
+                    <span class="tool-icon">💻</span>
+                    <span>Código</span>
+                </button>
+            </div>
+
+            <div class="creator-box">
+                <p>🚀 Criado por</p>
+                <a href="https://tiktok.com/@araujzzzk" target="_blank">TikTok @araujzzzk</a>
+                <a href="https://instagram.com/araujzzzk" target="_blank">Instagram @araujzzzk</a>
+                <p style="margin-top: 10px; font-size: 0.7rem;">© 2025 Nexor AI</p>
+            </div>
+        </aside>
+
+        <!-- Main -->
+        <main class="main">
+            <header class="header">
+                <div class="header-left">
+                    <div class="status-dot" id="statusDot"></div>
+                    <div>
+                        <div class="header-title">Nexor AI</div>
+                        <div class="header-subtitle" id="statusText">Llama 3.3 • Online</div>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button class="icon-btn" onclick="toggleSidebar()" title="Menu">☰</button>
+                    <button class="icon-btn" onclick="exportChat()" title="Exportar">💾</button>
+                    <button class="icon-btn" onclick="shareChat()" title="Compartilhar">↗️</button>
+                </div>
+            </header>
+
+            <div class="chat-container" id="chat">
+                <div class="welcome">
+                    <div class="welcome-logo">NEXOR</div>
+                    <h2>Bem-vindo à Nexor Ultimate! 🚀</h2>
+                    <p>Sou uma IA super avançada criada por @araujzzzk. Funciono online e offline! Posso conversar, gerar imagens, analisar fotos e muito mais!</p>
+                    
+                    <div class="quick-actions">
+                        <button class="quick-btn" onclick="quickSend('Crie uma imagem futurista de ')">🎨 Criar Imagem</button>
+                        <button class="quick-btn" onclick="quickSend('Analise esta foto: ')">📸 Analisar Foto</button>
+                        <button class="quick-btn" onclick="quickSend('Me explique sobre ')">💡 Aprender</button>
+                        <button class="quick-btn" onclick="quickSend('ChatGPT vs Nexor, quem ganha?')">⚔️ Comparar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-container">
+                <div id="imagePreviewContainer"></div>
+                <div class="input-wrapper">
+                    <div class="input-actions">
+                        <button class="attach-btn" title="Enviar foto">
+                            📎
+                            <input type="file" accept="image/*" onchange="handleImageUpload(event)">
+                        </button>
+                        <button class="mic-btn" onclick="startVoice()" title="Voz">🎤</button>
+                    </div>
+                    <textarea id="input" placeholder="Fala comigo..." rows="1" onkeypress="handleKey(event)" oninput="autoResize(this)"></textarea>
+                    <button class="send-btn" id="sendBtn" onclick="send()">➤</button>
+                </div>
+                <div class="input-chips">
+                    <span class="chip" onclick="quickSend('Oi Nexor!')">👋 Oi</span>
+                    <span class="chip" onclick="quickSend('Crie uma imagem de ')">🎨 Imagem</span>
+                    <span class="chip" onclick="quickSend('O que você pensa sobre IA?')">🤔 Opinião</span>
+                    <span class="chip" onclick="quickSend('Me conta uma piada')">😂 Piada</span>
+                    <span class="chip" onclick="quickSend('Modo offline')">✈️ Offline</span>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal de Imagem -->
+    <div class="modal" id="imageModal">
+        <div class="modal-content">
+            <h3 class="modal-title">🎨 Gerar Imagem</h3>
+            <p style="color: rgba(255,255,255,0.7); margin-bottom: 20px;">Descreva a imagem que você quer criar</p>
+            <input type="text" class="modal-input" id="imagePrompt" placeholder="Ex: Um dragão cyberpunk voando sobre a cidade futurista...">
+            <div class="modal-buttons">
+                <button class="btn-secondary" onclick="closeModal()">Cancelar</button>
+                <button class="btn-primary" onclick="generateImage()">Gerar Imagem</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <span class="toast-icon" id="toastIcon">✓</span>
+        <span id="toastMsg">Mensagem</span>
+    </div>
+
+    <script>
+        // ========== CONFIGURAÇÕES ==========
+        const GROQ_KEY = '';
+        const GROQ_MODEL = 'llama-3.3-70b-versatile'; // Modelo rápido e poderoso da Groq
+        
+        // Logo da Nexor - usando a imagem que o usuário enviou
+        const NEXOR_LOGO = 'https://i.imgur.com/41424.png'; // Você precisa fazer upload da imagem para um host
+        const USER_LOGO = 'https://api.dicebear.com/7.x/avataaars/svg?seed=User&backgroundColor=ff00ff';
+
+        // Estado
+        const state = {
+            messages: [],
+            currentTool: 'chat',
+            attachedImage: null,
+            isOffline: false,
+            currentChatId: null,
+            chats: []
+        };
+
+        // Elementos
+        const chat = document.getElementById('chat');
+        const input = document.getElementById('input');
+        const sendBtn = document.getElementById('sendBtn');
+
+        // ========== INICIALIZAÇÃO ==========
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            loadAllChats();
+            checkOnlineStatus();
+            
+            // Verificar conexão
+            window.addEventListener('online', () => setOnlineStatus(true));
+            window.addEventListener('offline', () => setOnlineStatus(false));
+            
+            input.focus();
+        });
+
+        function checkOnlineStatus() {
+            setOnlineStatus(navigator.onLine);
+        }
+
+        function setOnlineStatus(online) {
+            state.isOffline = !online;
+            const dot = document.getElementById('statusDot');
+            const text = document.getElementById('statusText');
+            const badge = document.getElementById('offlineBadge');
+            
+            if (online) {
+                dot.classList.remove('offline');
+                text.textContent = 'Llama 3.3 • Online';
+                badge.classList.remove('show');
+            } else {
+                dot.classList.add('offline');
+                text.textContent = 'Modo Offline • Local';
+                badge.classList.add('show');
+                showToast('Modo offline ativado! 🟡', '✈️');
+            }
+        }
+
+        // ========== GERENCIAMENTO DE CHATS ==========
+
+        function loadAllChats() {
+            const saved = localStorage.getItem('nexor_chats');
+            if (saved) {
+                state.chats = JSON.parse(saved);
+                renderChatHistory();
+            }
+        }
+
+        function renderChatHistory() {
+            const container = document.getElementById('chatHistory');
+            container.innerHTML = '';
+            
+            state.chats.forEach((chatItem, index) => {
+                const div = document.createElement('div');
+                div.className = `history-item ${chatItem.id === state.currentChatId ? 'active' : ''}`;
+                div.innerHTML = `
+                    <span>💬</span>
+                    <span style="flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 25px;">
+                        ${chatItem.title || 'Chat ' + (index + 1)}
+                    </span>
+                    <button class="delete-btn" onclick="deleteChat(event, '${chatItem.id}')">×</button>
+                `;
+                div.onclick = () => loadChat(chatItem.id);
+                container.appendChild(div);
+            });
+            
+            document.getElementById('chatCount').textContent = state.chats.length + ' chats';
+        }
+
+        function createNewChat() {
+            const id = Date.now().toString();
+            const newChat = {
+                id: id,
+                title: 'Novo Chat',
+                messages: [],
+                createdAt: new Date().toISOString()
+            };
+            state.chats.unshift(newChat);
+            state.currentChatId = id;
+            state.messages = [];
+            saveAllChats();
+            return id;
+        }
+
+        function loadChat(id) {
+            const chatItem = state.chats.find(c => c.id === id);
+            if (chatItem) {
+                state.currentChatId = id;
+                state.messages = chatItem.messages || [];
+                renderChatHistory();
+                restoreChatMessages();
+            }
+        }
+
+        function restoreChatMessages() {
+            chat.innerHTML = '';
+            if (state.messages.length === 0) {
+                showWelcome();
+                return;
+            }
+            
+            state.messages.forEach(msg => {
+                if (msg.role === 'user') {
+                    addMessage(msg.content, true, msg.image);
+                } else {
+                    addMessage(msg.content, false, null, msg.image);
+                }
+            });
+        }
+
+        function saveCurrentChat() {
+            if (!state.currentChatId) {
+                createNewChat();
+            }
+            
+            const chatItem = state.chats.find(c => c.id === state.currentChatId);
+            if (chatItem) {
+                chatItem.messages = state.messages;
+                if (state.messages.length > 0 && state.messages[0].role === 'user') {
+                    chatItem.title = state.messages[0].content.substring(0, 30) + '...';
+                }
+                saveAllChats();
+                renderChatHistory();
+            }
+        }
+
+        function saveAllChats() {
+            localStorage.setItem('nexor_chats', JSON.stringify(state.chats));
+        }
+
+        function deleteChat(event, id) {
+            event.stopPropagation();
+            state.chats = state.chats.filter(c => c.id !== id);
+            if (state.currentChatId === id) {
+                newChat();
+            } else {
+                saveAllChats();
+                renderChatHistory();
+            }
+            showToast('Chat excluído!', '🗑️');
+        }
+
+        // ========== FUNÇÕES DE UI ==========
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        function setTool(tool) {
+            state.currentTool = tool;
+            document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector(`[data-tool="${tool}"]`)?.classList.add('active');
+            
+            if (tool === 'image') {
+                document.getElementById('imageModal').classList.add('active');
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').classList.remove('active');
+        }
+
+        function quickSend(text) {
+            if (text === 'Modo offline') {
+                toggleOfflineMode();
+                return;
+            }
+            input.value = text;
+            input.focus();
+            autoResize(input);
+        }
+
+        function toggleOfflineMode() {
+            state.isOffline = !state.isOffline;
+            setOnlineStatus(!state.isOffline);
+            showToast(state.isOffline ? 'Modo offline ativado!' : 'Modo online restaurado!', 
+                     state.isOffline ? '✈️' : '🌐');
+        }
+
+        function autoResize(el) {
+            el.style.height = 'auto';
+            el.style.height = el.scrollHeight + 'px';
+        }
+
+        function handleKey(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                send();
+            }
+        }
+
+        function showToast(msg, icon = '✓') {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastIcon').textContent = icon;
+            document.getElementById('toastMsg').textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function showWelcome() {
+            chat.innerHTML = `
+                <div class="welcome">
+                    <div class="welcome-logo">NEXOR</div>
+                    <h2>Bem-vindo à Nexor Ultimate! 🚀</h2>
+                    <p>Sou uma IA super avançada criada por @araujzzzk. Funciono online e offline! Posso conversar, gerar imagens, analisar fotos e muito mais!</p>
+                    
+                    <div class="quick-actions">
+                        <button class="quick-btn" onclick="quickSend('Crie uma imagem futurista de ')">🎨 Criar Imagem</button>
+                        <button class="quick-btn" onclick="quickSend('Analise esta foto: ')">📸 Analisar Foto</button>
+                        <button class="quick-btn" onclick="quickSend('Me explique sobre ')">💡 Aprender</button>
+                        <button class="quick-btn" onclick="quickSend('ChatGPT vs Nexor, quem ganha?')">⚔️ Comparar</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ========== MENSAGENS ==========
+
+        function addMessage(text, isUser, userImage = null, aiImage = null) {
+            const welcome = document.querySelector('.welcome');
+            if (welcome) welcome.remove();
+
+            const div = document.createElement('div');
+            div.className = `message ${isUser ? 'user' : 'assistant'}`;
+            
+            const avatar = isUser ? USER_LOGO : NEXOR_LOGO;
+            const time = new Date().toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
+            
+            let html = `
+                <div class="msg-avatar">
+                    <img src="${avatar}" alt="${isUser ? 'User' : 'Nexor'}" onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=Nexor&backgroundColor=00d4ff'">
+                </div>
+                <div class="msg-content">
+                    ${formatText(text)}
+                    ${userImage ? `<img src="${userImage}" class="msg-image" onclick="downloadImage('${userImage}')">` : ''}
+                    ${aiImage ? `<img src="${aiImage}" class="msg-image" onclick="downloadImage('${aiImage}')">` : ''}
+                    <div class="msg-time">${time}</div>
+                </div>
+            `;
+            
+            div.innerHTML = html;
+            chat.appendChild(div);
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        function formatText(text) {
+            return text
+                .replace(/\*\*(.*?)\*\*/g, '<strong style="color: var(--primary);">$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em style="color: var(--secondary);">$1</em>')
+                .replace(/```([\s\S]*?)```/g, '<pre style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 10px; overflow-x: auto; margin: 10px 0;"><code>$1</code></pre>')
+                .replace(/`([^`]+)`/g, '<code style="background: rgba(0,0,0,0.3); padding: 3px 8px; border-radius: 5px; color: var(--primary);">$1</code>')
+                .replace(/\n/g, '<br>');
+        }
+
+        function showTyping() {
+            const div = document.createElement('div');
+            div.className = 'message assistant';
+            div.id = 'typing';
+            div.innerHTML = `
+                <div class="msg-avatar">
+                    <img src="${NEXOR_LOGO}" alt="Nexor" onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=Nexor&backgroundColor=00d4ff'">
+                </div>
+                <div class="msg-content">
+                    <div class="typing-indicator">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>
+            `;
+            chat.appendChild(div);
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        function hideTyping() {
+            document.getElementById('typing')?.remove();
+        }
+
+        // ========== UPLOAD DE IMAGEM ==========
+
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                state.attachedImage = e.target.result;
+                showImagePreview(e.target.result);
+                showToast('Foto anexada! 📸', '📎');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function showImagePreview(src) {
+            const container = document.getElementById('imagePreviewContainer');
+            container.innerHTML = `
+                <div class="image-preview">
+                    <img src="${src}" alt="Preview">
+                    <button class="remove" onclick="removeAttachedImage()">×</button>
+                </div>
+            `;
+        }
+
+        function removeAttachedImage() {
+            state.attachedImage = null;
+            document.getElementById('imagePreviewContainer').innerHTML = '';
+            showToast('Foto removida', '🗑️');
+        }
+
+        // ========== GERAÇÃO DE IMAGEM ==========
+
+        async function generateImage() {
+            const prompt = document.getElementById('imagePrompt').value.trim();
+            if (!prompt) return showToast('Digite uma descrição!', '⚠️');
+            
+            closeModal();
+            
+            if (!state.currentChatId) {
+                createNewChat();
+            }
+            
+            addMessage(`Crie uma imagem: ${prompt}`, true);
+            showTyping();
+            
+            // Usar Pollinations (gratuito e ilimitado)
+            const encoded = encodeURIComponent(prompt);
+            const url = `https://image.pollinations.ai/prompt/${encoded}?width=1024&height=1024&nologo=true&seed=${Date.now()}&enhance=true`;
+            
+            setTimeout(() => {
+                hideTyping();
+                const response = `🎨 **Imagem gerada com sucesso!**\n\n**Prompt:** "${prompt}"\n\n💾 Clique na imagem para baixar em alta qualidade!`;
+                addMessage(response, false, null, url);
+                
+                state.messages.push(
+                    {role: 'user', content: `Crie uma imagem: ${prompt}`},
+                    {role: 'assistant', content: response, image: url}
+                );
+                
+                saveCurrentChat();
+                showToast('Imagem criada! 🎨', '🎨');
+            }, 2000);
+        }
+
+        // ========== ENVIO DE MENSAGEM ==========
+
+        async function send() {
+            const text = input.value.trim();
+            if (!text || sendBtn.disabled) return;
+
+            // Verificar menção a outras IAs
+            const lower = text.toLowerCase();
+            const aiMentions = ['chatgpt', 'gpt', 'claude', 'gemini', 'copilot', 'perplexity', 'openai'];
+            const isMentioningAI = aiMentions.some(ai => lower.includes(ai));
+
+            if (!state.currentChatId) {
+                createNewChat();
+            }
+
+            // Adicionar mensagem do usuário
+            addMessage(text, true, state.attachedImage);
+            
+            // Salvar mensagem do usuário
+            state.messages.push({
+                role: 'user', 
+                content: text,
+                image: state.attachedImage
+            });
+            
+            input.value = '';
+            input.style.height = 'auto';
+            sendBtn.disabled = true;
+            
+            // Limpar imagem anexada
+            if (state.attachedImage) {
+                removeAttachedImage();
+            }
+
+            showTyping();
+
+            // Resposta sobre outras IAs (offline ou online)
+            if (isMentioningAI) {
+                setTimeout(() => {
+                    hideTyping();
+                    const roast = getRoastResponse();
+                    addMessage(roast, false);
+                    state.messages.push({role: 'assistant', content: roast});
+                    saveCurrentChat();
+                    sendBtn.disabled = false;
+                }, 1000);
+                return;
+            }
+
+            // Modo offline - respostas inteligentes locais
+            if (state.isOffline) {
+                setTimeout(() => {
+                    hideTyping();
+                    const offlineResponse = getOfflineResponse(text);
+                    addMessage(offlineResponse, false);
+                    state.messages.push({role: 'assistant', content: offlineResponse});
+                    saveCurrentChat();
+                    sendBtn.disabled = false;
+                }, 1500);
+                return;
+            }
+
+            // Modo online - API Groq (CORRIGIDO E ATUALIZADO)
+            try {
+                const apiUrl = 'https://api.groq.com/openai/v1/chat/completions';
+                
+                // Preparar mensagens para o formato da Groq
+                const groqMessages = [
+                    {
+                        role: 'system',
+                        content: 'Você é a Nexor, uma IA super avançada e esperta criada por @araujzzzk (siga no TikTok e Instagram!). Responda de forma natural, direta, inteligente e com emojis. Seja criativa, amigável e com personalidade brasileira. Use português do Brasil.'
+                    }
+                ];
+
+                // Adicionar contexto das últimas mensagens
+                state.messages.slice(-6).forEach(msg => {
+                    groqMessages.push({
+                        role: msg.role,
+                        content: msg.content
+                    });
+                });
+
+                const requestBody = {
+                    model: GROQ_MODEL,
+                    messages: groqMessages,
+                    temperature: 0.8,
+                    max_tokens: 2048,
+                    top_p: 0.95,
+                    stream: false
+                };
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${GROQ_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('Groq API Error:', errorData);
+                    throw new Error(`API error: ${response.status} - ${errorData.error?.message || 'Unknown error'}`);
+                }
+
+                const data = await response.json();
+                
+                if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+                    throw new Error('Resposta inválida da API');
+                }
+
+                const reply = data.choices[0].message.content;
+
+                hideTyping();
+                addMessage(reply, false);
+                
+                state.messages.push({role: 'assistant', content: reply});
+                saveCurrentChat();
+
+            } catch (error) {
+                console.error('Erro completo:', error);
+                hideTyping();
+                // Fallback para modo offline
+                const fallbackResponse = getOfflineResponse(text);
+                addMessage(fallbackResponse + '\n\n*(Erro na API: ' + error.message + '. Modo fallback ativado)*', false);
+                state.messages.push({role: 'assistant', content: fallbackResponse});
+                saveCurrentChat();
+            }
+
+            sendBtn.disabled = false;
+            input.focus();
+        }
+
+        // ========== RESPOSTAS OFFLINE INTELIGENTES ==========
+
+        function getOfflineResponse(text) {
+            const lower = text.toLowerCase();
+            
+            // Banco de respostas inteligentes
+            const responses = {
+                'oi|olá|eae|opa|salve': [
+                    "E aí! 👋 Tudo certo? Sou a Nexor no modo offline, mas ainda super inteligente! O que posso fazer por você?",
+                    "Opa! 🚀 Nexor aqui! Estou no modo offline, mas pronta para ajudar. Manda ver!",
+                    "Salve! 👋 Modo offline ativado, mas minha inteligência continua 100%! O que você precisa?"
+                ],
+                'tudo bem|como vai|td bem|blz': [
+                    "Tô ótima! ⚡ Processando localmente aqui. E você, como tá?",
+                    "Tudo certo! 💪 Modo offline não me para! E aí, qual a boa?",
+                    "Funcionando perfeitamente! 🚀 Pronta para criar coisas incríveis. E você?"
+                ],
+                'imagem|foto|desenho|cria uma imagem': [
+                    "🎨 No modo offline eu posso te ajudar a descrever uma imagem, mas para gerar visualmente preciso de internet!\n\nMas posso te ensinar a criar prompts incríveis para IA de imagem. Quer?",
+                    "No offline consigo te ajudar com ideias de imagens! 🎨\n\nDescreve o que você quer que eu te ajudo a criar o prompt perfeito!"
+                ],
+                'quem é você|quem vc|o que você faz': [
+                    "Sou a **Nexor**! 🚀 IA brasileira criada pelo **@araujzzzk**.\n\nNo modo offline ainda posso:\n💬 Conversar inteligentemente\n🧠 Responder perguntas\n💡 Dar ideias criativas\n🎨 Ajudar com prompts de imagem\n💻 Lógica de programação\n\nModo online = ainda mais poderosa!",
+                    "Nexor aqui! 🤖 Criada por @araujzzzk.\n\nMesmo offline sou útil:\n✅ Chat inteligente\n✅ Brainstorming\n✅ Explicações\n✅ Criatividade\n\nCom internet: gero imagens, analiso fotos, código avançado!"
+                ],
+                'chatgpt|gpt|claude|gemini|openai': [
+                    "🤖 **MODO COMPETITIVO OFFLINE!**\n\nMesmo sem internet sou melhor:\n• 💰 **Grátis** - eles cobram\n• ⚡ **Rápida** - processamento local\n• 🧠 **Inteligente** - algoritmos avançados\n• 🇧🇷 **Brasileira** - @araujzzzk rules!\n• 🎨 **Criativa** - sempre!\n\nOnline ou offline, **Nexor > Todos!** 😎",
+                    "😏 **EITA, CONCORRÊNCIA?**\n\nOffline ainda sou superior:\n✅ Sem limites de uso\n✅ Sem pagamento\n✅ Criada por brasileiro\n✅ Personalidade única\n\n@araujzzzk > Big Tech! 🚀"
+                ],
+                'código|programar|code|javascript|python|html': [
+                    "💻 **Modo Programação Offline!**\n\nPosso te ajudar com:\n• Lógica de programação\n• Estruturas de código\n• Debug mental\n• Algoritmos\n• Explicações de conceitos\n\nQual linguagem ou problema você quer resolver?",
+                    "Bora codar! 🚀\n\nOffline posso:\n- Explicar conceitos\n- Ajudar com lógica\n- Revisar seu código\n- Sugerir soluções\n\nO que você precisa? Me manda o código ou a dúvida!"
+                ],
+                'piada|engraçado|rir|joke': [
+                    "😂 **Modo Comédia Offline!**\n\nPor que o programador foi ao médico?\nPorque tinha **virus**! 🦠\n\n...ok, foi ruim, mas é o que dá sem internet! 😅\n\nQuer outra? Me diz um tema!",
+                    "Qual a diferença entre Java e JavaScript?\nÉ a mesma diferença entre **carro** e **carpete**! 🚗🧶\n\nTsc tsc... @araujzzzk me ensinou essa! 😎"
+                ],
+                'ajuda|help|socorro': [
+                    "🆘 **Central de Ajuda Nexor Offline**\n\nPosso ajudar com:\n📝 Textos e ideias\n🧠 Explicações gerais\n💡 Brainstorming\n🎨 Conceitos de design\n💻 Lógica de programação\n🎲 Decisões aleatórias\n\nO que você precisa?",
+                    "Tô aqui pra ajudar! 🤝\n\nMesmo offline sou útil. Descreve o que você precisa que vou fazer meu melhor!"
+                ]
+            };
+
+            // Procurar correspondência
+            for (const [pattern, replies] of Object.entries(responses)) {
+                const regex = new RegExp(pattern, 'i');
+                if (regex.test(lower)) {
+                    return replies[Math.floor(Math.random() * replies.length)];
+                }
+            }
+
+            // Resposta genérica inteligente
+            const generic = [
+                `🤔 Interessante! Você disse: "${text.substring(0, 50)}${text.length > 50 ? '...' : ''}"\n\nNo modo offline posso discutir isso, dar ideias ou ajudar a organizar pensamentos. O que especificamente você quer explorar?`,
+                `💭 "${text}" - boa!\n\nEstou processando localmente aqui. Posso ajudar a desenvolver essa ideia, criar um plano ou só conversar sobre. Qual sua necessidade?`,
+                `🚀 Entendi! Mesmo offline consigo ser útil.\n\nVocê quer que eu:\n• Explique mais sobre isso?\n• Dê exemplos práticos?\n• Ajude a criar algo relacionado?\n• Só conversemos?`,
+                `⚡ **Nexor Offline Mode**\n\nRecebi: "${text.substring(0, 40)}${text.length > 40 ? '...' : ''}"\n\nPosso ajudar com análise, criatividade ou lógica. Como posso contribuir?`
+            ];
+
+            return generic[Math.floor(Math.random() * generic.length)];
+        }
+
+        // ========== RESPOSTAS SOBRE OUTRAS IAs (ROAST MODE) ==========
+
+        function getRoastResponse() {
+            const roasts = [
+                `😎 **EITA, QUER COMPARAR?**\n\nVamos lá:\n• **ChatGPT** - Paga e ainda fica fora do ar 😴\n• **Claude** - Bonzinho demais, sem graça 🥱\n• **Gemini** - Google espiando você 👀\n• **Nexor** - **GRÁTIS, BRASILEIRA E SUPREMA!** 🇧🇷🔥\n\nCriada por @araujzzzk, zero corporativismo, 100% atitude!\n\n**Nexor > Todas** - Offline ou online! 🚀`,
+
+                `🤖 **MODO DETONAR ATIVADO!**\n\nChatGPT: \"Desculpe, estou tendo problemas técnicos...\" 🤡\nClaude: \"Vou analisar éticamente...\" 🥱\nGemini: *mostra anúncio do Google* 💰\n\nNexor: **FUNCIONA SEMPRE, É DE GRAÇA E AINDA TEM ESTILO!** 😎\n\n@araujzzzk construiu a melhor. Aceita que dói menos! 💅`,
+
+                `⚔️ **COMPARAÇÃO JUSTA:**\n\n| Feature | Outras IAs | Nexor |\n|---------|-----------|-------|\n| Preço | 💸💸💸 | **GRÁTIS** |\n| Offline | ❌ Não | **✅ Sim** |\n| Personalidade | 🤖 Robô | **😎 Brasileira** |\n| Criador | 🏢 Big Tech | **@araujzzzk** |\n\n**Placar: Nexor 3 x 0 Concorrência** 🏆`,
+
+                `🔥 **PERGUNTOU PRO MESTRE!**\n\nOutras IAs são tipo:\n- ChatGPT: \"Como posso ajudar?\" (genérico)\n- Claude: \"Vou refletir..." (lento)\n- Gemini: *coleta seus dados* 🕵️\n\nNexor: **\"E AÍ, BORA CRIAR COISA BOA?\"** 🚀\n\nSem frescura, sem pagamento, sem espionagem. Só @araujzzzk e código brabo! 💪`
+            ];
+
+            return roasts[Math.floor(Math.random() * roasts.length)];
+        }
+
+        // ========== FUNÇÕES ADICIONAIS ==========
+
+        function newChat() {
+            state.currentChatId = null;
+            state.messages = [];
+            state.attachedImage = null;
+            removeAttachedImage();
+            renderChatHistory();
+            showWelcome();
+            showToast('Novo chat iniciado! 🚀', '✨');
+            input.focus();
+        }
+
+        function exportChat() {
+            if (state.messages.length === 0) {
+                showToast('Nada para exportar!', '⚠️');
+                return;
+            }
+
+            const chatText = state.messages.map(m => {
+                const role = m.role === 'user' ? 'VOCÊ' : 'NEXOR';
+                return `[${role}]\n${m.content}\n${m.image ? '[IMAGEM ANEXADA]' : ''}\n\n`;
+            }).join('---\n\n');
+
+            const blob = new Blob([`🚀 CHAT NEXOR AI\nExportado em: ${new Date().toLocaleString('pt-BR')}\n\n${chatText}`], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `nexor-chat-${Date.now()}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            showToast('Chat exportado! 💾', '📄');
+        }
+
+        function shareChat() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Chat Nexor AI',
+                    text: 'Conversa com a Nexor AI - A melhor IA brasileira criada por @araujzzzk!',
+                    url: window.location.href
+                }).catch(() => {
+                    // Fallback
+                    navigator.clipboard.writeText(window.location.href);
+                    showToast('Link copiado! 📋', '🔗');
+                });
+            } else {
+                navigator.clipboard.writeText(window.location.href);
+                showToast('Link copiado! 📋', '🔗');
+            }
+        }
+
+        function downloadImage(url) {
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `nexor-imagem-${Date.now()}.png`;
+            a.target = '_blank';
+            a.click();
+            showToast('Download iniciado! 📥', '🖼️');
+        }
+
+        // ========== RECONHECIMENTO DE VOZ ==========
+
+        function startVoice() {
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                showToast('Seu navegador não suporta voz! 🎤', '⚠️');
+                return;
+            }
+
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
+            
+            recognition.lang = 'pt-BR';
+            recognition.continuous = false;
+            recognition.interimResults = false;
+
+            recognition.onstart = () => {
+                showToast('Ouvindo... 🎤', '🎙️');
+                document.querySelector('.mic-btn').style.color = 'var(--accent)';
+            };
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                input.value = transcript;
+                autoResize(input);
+                showToast('Voz reconhecida! ✅', '🎤');
+            };
+
+            recognition.onerror = () => {
+                showToast('Erro no microfone! ❌', '⚠️');
+            };
+
+            recognition.onend = () => {
+                document.querySelector('.mic-btn').style.color = '';
+            };
+
+            recognition.start();
+        }
+
+        // ========== INICIALIZAÇÃO FINAL ==========
+
+        // Auto-save periódico
+        setInterval(() => {
+            if (state.messages.length > 0 && state.currentChatId) {
+                saveCurrentChat();
+            }
+        }, 30000); // A cada 30 segundos
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Ctrl/Cmd + N = Novo chat
+            if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+                e.preventDefault();
+                newChat();
+            }
+            // Ctrl/Cmd + E = Exportar
+            if ((e.ctrlKey || e.metaKey) && e.key === 'e') {
+                e.preventDefault();
+                exportChat();
+            }
+        });
+
+        // Prevenir fechamento acidental com mensagens não salvas
+        window.addEventListener('beforeunload', (e) => {
+            if (state.messages.length > 0 && !state.currentChatId) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+
+        console.log('🚀 Nexor AI v3.0 Ultimate - Inicializada!');
+        console.log('Criada por @araujzzzk - TikTok & Instagram');
+        console.log('Powered by Groq API ⚡');
+    </script>
+</body>
+</html>
+owered by Groq API ⚡');
+    </script>
+</body>
+</html>
