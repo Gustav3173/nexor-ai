@@ -1434,7 +1434,14 @@
 
             // Modo online - API Groq (CORRIGIDO E ATUALIZADO)
             try {
-                const apiUrl = 'api.php';
+                const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "Authorization": ""
+  },
+  body: JSON.stringify({...})
+});
                 // Preparar mensagens para o formato da Groq
                 const groqMessages = [
                     {
